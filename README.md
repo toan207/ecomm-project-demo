@@ -1,1 +1,1 @@
-# lnd-toy-server
+# ecomm-project-demo
