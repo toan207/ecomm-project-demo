@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
+const { Success } = require('../model/base-message');
+const { ResponseLib } = require('../lib/response.lib');
 
-const imageFolderPath = path.join(__dirname.split('/controller')[0], 'uploads');
+const imageFolderPath = path.join(__dirname.split('\\controller')[0], 'uploads');
+const imageFolderPathLinux = path.join(__dirname.split('/controller')[0], 'uploads');
 
 async function video(req, res) {
     const videoName = req.params.videoName;
@@ -38,7 +41,11 @@ async function video(req, res) {
 
 async function info(req, res) {
     const imageName = req.params.imageName;
-    const imagePath = path.join(imageFolderPath, imageName);
+    let imagePath = path.join(imageFolderPath, imageName);
+
+    if (!fs.existsSync(imagePath)) {
+        imagePath = path.join(imageFolderPathLinux, imageName);
+    }
 
     if (!fs.existsSync(imagePath)) {
         return res.status(404).send('Image not found.');
@@ -53,11 +60,10 @@ async function info(req, res) {
 }
 
 async function upload(req, res) {
-    const file = req.files;
-    console.log(req.body.name)
+    const file = req.file;
 
-    console.log('Uploaded file:', file);
-    res.send('File uploaded successfully.');
+    const result = Success();
+    ResponseLib(res, result.code, result.message, file.filename);
 }
 
 module.exports = {

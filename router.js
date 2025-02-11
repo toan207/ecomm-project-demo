@@ -60,7 +60,7 @@ app.use(session_checker);
 // app.use(editor_required);
 
 // admin required
-// app.use(admin_required);
+app.use(admin_required);
 
 app.use('/api/v1', AdminRouter);
 //

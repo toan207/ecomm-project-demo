@@ -1,7 +1,7 @@
 
 module.exports = {
 	apps: [{
-		name: "lnd",
+		name: "muanhanh",
 		script: "./server.js",
 		time: true,
 	}]

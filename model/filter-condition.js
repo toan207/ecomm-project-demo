@@ -1,7 +1,12 @@
-export const UserFilterConditionInit = () => {
+const UserFilterConditionInit = () => {
     return { delete: { $ne: true } };
 }
 
-export const AdminFilterConditionInit = () => {
+const AdminFilterConditionInit = () => {
     return { delete: { $ne: true }, hide: { $ne: true } };
+}
+
+module.exports = {
+    UserFilterConditionInit,
+    AdminFilterConditionInit
 }

@@ -1,19 +1,20 @@
-const Branch = require('../schema').models.Branch;
+const Category = require('../schema').models.Category;
 const { ResponseLib } = require('../lib/response.lib');
 const { FieldIsRequired, Success } = require('../model/base-message');
 const { UserFilterConditionInit, AdminFilterConditionInit } = require('../model/filter-condition');
 const { Paging } = require('../model/paging');
 
 async function add(req, res) {
-    const { name, image } = req.body;
-
+    const { name, parent, image, order } = req.body;
+    // console.log(req.headers['user-agent'])
     if (!name) {
         const result = FieldIsRequired('name');
         return ResponseLib(res, result.code, result.message, null);
     }
-    const branch = await Branch.create({ name, image });
+    const category = await Category.create({ name, parent, image, order });
 
-    ResponseLib(res, 200, Success(), branch);
+    const result = Success();
+    ResponseLib(res, result.code, result.message, category);
 }
 
 async function list(req, res) {
@@ -23,11 +24,10 @@ async function list(req, res) {
     const { name } = req.query;
     if (name) query.name = { $regex: name, $options: 'i' };
 
-    const branches = await Branch.find(query).skip(paging.skip).limit(paging.limit);
-    const paging = Paging(page, limit, branches.length);
+    const categories = await Category.find(query).skip(paging.skip).limit(paging.limit);
+    const paging = Paging(page, limit, categories.length);
     const result = Success();
-
-    ResponseLib(res, result.code, result.message, { paging, branches });
+    ResponseLib(res, result.code, result.message, { paging, categories });
 }
 
 async function adminList(req, res) {
@@ -36,16 +36,16 @@ async function adminList(req, res) {
     const { name } = req.query;
     if (name) query.name = { $regex: name, $options: 'i' };
 
-    const branches = await Branch.find(query).skip(paging.skip).limit(paging.limit);
-    const paging = Paging(page, limit, branches.length);
-    const result = Success();
+    const categories = await Category.find(query).skip(paging.skip).limit(paging.limit);
+    const paging = Paging(page, limit, categories.length);
 
-    ResponseLib(res, result.code, result.message, { paging, branches });
+    const result = Success();
+    ResponseLib(res, result.code, result.message, { paging, categories });
 }
 
 async function update(req, res) {
     const { id } = req.params;
-    const { name, image } = req.body;
+    const { name, parent, image, order } = req.body;
 
     if (!id) {
         const result = FieldIsRequired('id');
@@ -56,30 +56,30 @@ async function update(req, res) {
         return ResponseLib(res, result.code, result.message, null);
     }
 
-    const branch = await Branch.findByIdAndUpdate(id, { name, image });
+    const category = await Category.findByIdAndUpdate(id, { name, parent, image, order });
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch._id);
+    ResponseLib(res, result.code, result.message, category._id);
 }
 
 async function deleteItem(req, res) {
     const { id } = req.params;
-    const branch = await Branch.findByIdAndUpdate(id, { delete: true });
+    const category = await Category.findByIdAndUpdate(id, { delete: true });
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch._id);
+    ResponseLib(res, result.code, result.message, category._id);
 }
 
 async function hideItem(req, res) {
     const { id } = req.params;
-    const branch = await Branch.findByIdAndUpdate(id, { hide: true });
+    const category = await Category.findByIdAndUpdate(id, { hide: true });
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch._id);
+    ResponseLib(res, result.code, result.message, category._id);
 }
 
 async function get(req, res) {
     const { id } = req.params;
-    const branch = await Branch.findById(id);
+    const category = await Category.findById(id);
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch);
+    ResponseLib(res, result.code, result.message, category);
 }
 
 module.exports = {

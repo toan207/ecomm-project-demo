@@ -1,13 +1,18 @@
-export const FieldIsRequired = (field) => {
+const FieldIsRequired = (field) => {
     return {
+        code: 400,
         message: `Field ${field} is required!`,
-        status: 400
     }
 }
 
-export const Success = () => {
+const Success = () => {
     return {
+        code: 200,
         message: `Executed successfully!`,
-        status: 200
     }
+}
+
+module.exports = {
+    FieldIsRequired,
+    Success
 }
