@@ -1,8 +1,8 @@
 const Category = require('../schema').models.Category;
 const { ResponseLib } = require('../lib/response.lib');
 const { FieldIsRequired, Success } = require('../model/base-message');
-const { UserFilterConditionInit, AdminFilterConditionInit } = require('../model/filter-condition');
 const { Paging } = require('../model/paging');
+const { getCategory, getCategoryAdmin } = require('../lib/category.lib');
 
 async function add(req, res) {
     const { name, parent, image, order } = req.body;
@@ -20,23 +20,17 @@ async function add(req, res) {
 async function list(req, res) {
     const { page, limit } = req.query;
 
-    const query = UserFilterConditionInit();
-    const { name } = req.query;
-    if (name) query.name = { $regex: name, $options: 'i' };
-
-    const categories = await Category.find(query).skip(paging.skip).limit(paging.limit);
+    const categories = await getCategory();
     const paging = Paging(page, limit, categories.length);
+
     const result = Success();
     ResponseLib(res, result.code, result.message, { paging, categories });
 }
 
 async function adminList(req, res) {
     const { page, limit } = req.query;
-    const query = AdminFilterConditionInit();
-    const { name } = req.query;
-    if (name) query.name = { $regex: name, $options: 'i' };
 
-    const categories = await Category.find(query).skip(paging.skip).limit(paging.limit);
+    const categories = await getCategoryAdmin();
     const paging = Paging(page, limit, categories.length);
 
     const result = Success();
