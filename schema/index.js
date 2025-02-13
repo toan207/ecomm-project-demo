@@ -11,5 +11,6 @@ db.model('Session', require('./models/session.model'));
 db.model('Vietnam', require('./models/vietnam.model'));
 db.model('Brand', require('./models/brand.model'));
 db.model('Category', require('./models/category.model'));
+db.model('Banner', require('./models/banner.model'));
 
 module.exports = db;
