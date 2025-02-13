@@ -1,4 +1,4 @@
-const Branch = require('../schema').models.Branch;
+const Brand = require('../schema').models.Brand;
 const { ResponseLib } = require('../lib/response.lib');
 const { FieldIsRequired, Success } = require('../model/base-message');
 const { UserFilterConditionInit, AdminFilterConditionInit } = require('../model/filter-condition');
@@ -11,9 +11,9 @@ async function add(req, res) {
         const result = FieldIsRequired('name');
         return ResponseLib(res, result.code, result.message, null);
     }
-    const branch = await Branch.create({ name, image });
+    const brand = await Brand.create({ name, image });
 
-    ResponseLib(res, 200, Success(), branch);
+    ResponseLib(res, 200, Success(), brand);
 }
 
 async function list(req, res) {
@@ -23,11 +23,11 @@ async function list(req, res) {
     const { name } = req.query;
     if (name) query.name = { $regex: name, $options: 'i' };
 
-    const branches = await Branch.find(query).skip(paging.skip).limit(paging.limit);
-    const paging = Paging(page, limit, branches.length);
+    const brands = await Brand.find(query).skip(paging.skip).limit(paging.limit);
+    const paging = Paging(page, limit, brands.length);
     const result = Success();
 
-    ResponseLib(res, result.code, result.message, { paging, branches });
+    ResponseLib(res, result.code, result.message, { paging, brands });
 }
 
 async function adminList(req, res) {
@@ -36,11 +36,11 @@ async function adminList(req, res) {
     const { name } = req.query;
     if (name) query.name = { $regex: name, $options: 'i' };
 
-    const branches = await Branch.find(query).skip(paging.skip).limit(paging.limit);
-    const paging = Paging(page, limit, branches.length);
+    const brands = await Brand.find(query).skip(paging.skip).limit(paging.limit);
+    const paging = Paging(page, limit, brands.length);
     const result = Success();
 
-    ResponseLib(res, result.code, result.message, { paging, branches });
+    ResponseLib(res, result.code, result.message, { paging, brands });
 }
 
 async function update(req, res) {
@@ -56,30 +56,30 @@ async function update(req, res) {
         return ResponseLib(res, result.code, result.message, null);
     }
 
-    const branch = await Branch.findByIdAndUpdate(id, { name, image });
+    const brand = await Brand.findByIdAndUpdate(id, { name, image });
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch._id);
+    ResponseLib(res, result.code, result.message, brand._id);
 }
 
 async function deleteItem(req, res) {
     const { id } = req.params;
-    const branch = await Branch.findByIdAndUpdate(id, { delete: true });
+    const brand = await Brand.findByIdAndUpdate(id, { delete: true });
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch._id);
+    ResponseLib(res, result.code, result.message, brand._id);
 }
 
 async function hideItem(req, res) {
     const { id } = req.params;
-    const branch = await Branch.findByIdAndUpdate(id, { hide: true });
+    const brand = await Brand.findByIdAndUpdate(id, { hide: true });
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch._id);
+    ResponseLib(res, result.code, result.message, brand._id);
 }
 
 async function get(req, res) {
     const { id } = req.params;
-    const branch = await Branch.findById(id);
+    const brand = await Brand.findById(id);
     const result = Success();
-    ResponseLib(res, result.code, result.message, branch);
+    ResponseLib(res, result.code, result.message, brand);
 }
 
 module.exports = {
