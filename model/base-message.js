@@ -12,7 +12,15 @@ const Success = () => {
     }
 }
 
+const NotFound = () => {
+    return {
+        code: 404,
+        message: `Not found!`,
+    }
+}
+
 module.exports = {
     FieldIsRequired,
-    Success
+    Success,
+    NotFound
 }
