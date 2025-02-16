@@ -3,7 +3,7 @@ const Paging = (page, limit, totalData) => {
     if (limit == null) limit = 10;
     const skip = (page - 1) * limit;
     const totalPage = Math.ceil(totalData / limit);
-    return { page, skip, limit, totalPage };
+    return { page, skip, limit, totalPage: totalData || 0 };
 }
 
 module.exports = {
