@@ -2,6 +2,6 @@ const { loadCachedCategory, loadCachedCategoryAdmin } = require('./lib/category.
 const schedule = require('node-schedule');
 
 schedule.scheduleJob('* * * * *', () => {
-    loadCachedCategory();
-    loadCachedCategoryAdmin();
+    // loadCachedCategory();
+    // loadCachedCategoryAdmin();
 });

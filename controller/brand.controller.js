@@ -12,8 +12,8 @@ async function add(req, res) {
         return ResponseLib(res, result.code, result.message, null);
     }
     const brand = await Brand.create({ name, image });
-
-    ResponseLib(res, 200, Success(), brand);
+    const result = Success();
+    ResponseLib(res, result.code, result.message, brand);
 }
 
 async function list(req, res) {
@@ -32,15 +32,15 @@ async function list(req, res) {
 
 async function adminList(req, res) {
     const { page, limit } = req.query;
-    const query = AdminFilterConditionInit();
-    const { name } = req.query;
-    if (name) query.name = { $regex: name, $options: 'i' };
+    let query = { delete: false };
+    const { search } = req.query;
+    if (search) query.name = { $regex: search, $options: 'i' };
 
-    const brands = await Brand.find(query).skip(paging.skip).limit(paging.limit);
+    const brands = await Brand.find(query).skip((page -1) * limit).limit(limit);
     const paging = Paging(page, limit, brands.length);
     const result = Success();
 
-    ResponseLib(res, result.code, result.message, { paging, brands });
+    ResponseLib(res, result.code, result.message, { paging, data: brands });
 }
 
 async function update(req, res) {
@@ -63,14 +63,16 @@ async function update(req, res) {
 
 async function deleteItem(req, res) {
     const { id } = req.params;
-    const brand = await Brand.findByIdAndUpdate(id, { delete: true });
+    const {dele} = req.body
+    const brand = await Brand.findByIdAndUpdate(id, { delete: dele });
     const result = Success();
     ResponseLib(res, result.code, result.message, brand._id);
 }
 
 async function hideItem(req, res) {
     const { id } = req.params;
-    const brand = await Brand.findByIdAndUpdate(id, { hide: true });
+    const {hide} = req.body
+    const brand = await Brand.findByIdAndUpdate(id, { hide: hide });
     const result = Success();
     ResponseLib(res, result.code, result.message, brand._id);
 }
