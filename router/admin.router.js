@@ -11,6 +11,6 @@ router.use('/account', AccountRouter);
 router.use('/brand', BrandRouter);
 router.use('/category', CategoryRouter);
 router.use('/banner', BannerRouter);
-router.use('product', ProductRouter)
+router.use('/product', ProductRouter)
 
 module.exports = router;
