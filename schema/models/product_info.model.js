@@ -21,7 +21,7 @@ const Schema = new mongoose.Schema({
     default: "active",
     enum: ["active", "inactive"],
   },
-  imgaes: {
+  images: {
     type: [String],
     default: [],
   },
@@ -29,6 +29,18 @@ const Schema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  material: {
+    type: String,
+  },
+  dimensions:{
+    type: String,
+  },
+  volume:{
+    type: String,
+  },
+  weight:{
+    type: String,
+  }
 });
 
 Schema.set("timestamps", true);

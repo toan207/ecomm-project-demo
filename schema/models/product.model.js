@@ -13,6 +13,7 @@ const Schema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+    default: 0
   },
   logo: {
     type: String,

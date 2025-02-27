@@ -10,11 +10,11 @@ const {
 
 const router = Router();
 
-router.get("/admin", adminList);
-router.post("/admin", add);
-router.patch("/admin/:id/hide", hide);
-router.put("/admin/:id", update);
-router.delete("/admin/:id", remove);
-router.patch("/admin/order", updateOrder);
+router.get("", adminList);
+router.post("", add);
+router.patch("/:id/hide", hide);
+router.put("/:id", update);
+router.delete("/:id", remove);
+router.patch("/order", updateOrder);
 
 module.exports = router;

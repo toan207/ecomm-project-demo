@@ -62,7 +62,7 @@ app.use(session_checker);
 // admin required
 app.use(admin_required);
 
-app.use('/api/v1', AdminRouter);
+app.use('/api/v1/admin', AdminRouter);
 //
 app.use((err, req, res, next) => {
     console.log(err);

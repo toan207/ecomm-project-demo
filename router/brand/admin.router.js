@@ -3,10 +3,10 @@ const BrandController = require('../../controller/brand.controller');
 
 const router = express.Router();
 
-router.get('/admin', BrandController.adminList);
-router.post('/admin', BrandController.add);
-router.put('/admin/:id', BrandController.update);
-router.delete('/admin/:id', BrandController.deleteItem);
-router.patch('/admin/:id/hide', BrandController.hideItem);
+router.get('', BrandController.adminList);
+router.post('', BrandController.add);
+router.put('/:id', BrandController.update);
+router.delete('/:id', BrandController.deleteItem);
+router.patch('/:id/hide', BrandController.hideItem);
 
 module.exports = router;
