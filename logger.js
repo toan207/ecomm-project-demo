@@ -3,9 +3,7 @@ const chalk = require('chalk');
 
 morgan.token('coloredStatus', (req, res) => {
     const status = res.statusCode;
-    const colorizedStatus =
-        status >= 500 ? chalk.red(status) : chalk.green(status);
-    return colorizedStatus;
+  return status >= 500 ? chalk.red(status) : chalk.green(status);
 });
 
 const logger = morgan(

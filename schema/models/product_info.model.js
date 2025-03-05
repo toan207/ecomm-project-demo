@@ -16,31 +16,22 @@ const Schema = new mongoose.Schema({
     required: true,
     default: "",
   },
-  status: {
-    type: String,
-    default: "active",
-    enum: ["active", "inactive"],
-  },
   images: {
     type: [String],
     default: [],
   },
-  video: {
-    type: String,
-    default: "",
-  },
   material: {
     type: String,
   },
-  dimensions:{
+  dimensions: {
     type: String,
   },
-  volume:{
+  volume: {
     type: String,
   },
-  weight:{
+  weight: {
     type: String,
-  }
+  },
 });
 
 Schema.set("timestamps", true);

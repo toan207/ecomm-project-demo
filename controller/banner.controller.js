@@ -23,7 +23,7 @@ async function list(req, res) {
 }
 
 async function adminList(req, res) {
-  let query = { delete: false };
+  let query = { };
   const banners = await Banner.find(query).sort({ order: -1 });
   const result = Success();
   ResponseLib(res, result.code, result.message, { data: banners });

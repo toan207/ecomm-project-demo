@@ -4,7 +4,6 @@ const Schema = new mongoose.Schema({
   shop: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Shop",
-    required: true,
   },
   name: {
     type: String,
@@ -43,6 +42,9 @@ const Schema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  variant: {
+    type: Boolean,
+  },
   status: {
     type: String,
     default: "active",
@@ -56,10 +58,5 @@ const Schema = new mongoose.Schema({
 
 Schema.set("timestamps", true);
 
-Schema.pre("remove", async function (next) {
-  await this.model("ProductInfo").deleteMany({product: this._id});
-  await this.model("ProductVariants").deleteMany({product: this._id});
-  next();
-});
 
 module.exports = Schema;

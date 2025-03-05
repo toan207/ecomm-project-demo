@@ -4,8 +4,10 @@ const {validateCreateProduct, validateUpdateProduct} = require("../../validation
 
 const router = express.Router();
 
-router.post('/', validateCreateProduct, ProductController.create);
-router.put('/:_id', validateUpdateProduct, ProductController.update);
+router.get('/:_id', ProductController.get);
 router.delete('/:_id', ProductController.deleteItem);
+router.put('/:_id', validateUpdateProduct, ProductController.update);
+router.post('/', validateCreateProduct, ProductController.create);
+router.get('/', ProductController.adminList);
 
 module.exports = router;

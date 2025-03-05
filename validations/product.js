@@ -5,6 +5,7 @@ const createProductSchema = Joi.object({
   shop: Joi.string().optional(),
   name: Joi.string().min(3).max(100).required(),
   price: Joi.number().min(0).required(),
+  stock: Joi.number().min(0).required(),
   logo: Joi.string().required(),
   category: Joi.string().required(),
   brand: Joi.string().required(),
@@ -26,7 +27,7 @@ const createProductSchema = Joi.object({
       price: Joi.number().min(0).required(),
       stock: Joi.number().min(0).required(),
       attributes: Joi.object().pattern(Joi.string(), Joi.string()).required(),
-      image: Joi.string()
+      // image: Joi.string()
     })
   ),
   status: Joi.string().valid("active", "inactive").default("active")

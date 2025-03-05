@@ -1,15 +1,25 @@
-const {ProductService, ProductInfoService, ProductVariantsService} = require("../services");
+const ProductService = require('../services/product/product.service')
+const ProductInfoService = require('../services/product/product-info.service')
+const ProductVariantsService = require('../services/product/product-variants.service')
+const {Paging} = require("../model/paging");
+const {Success} = require("../model/base-message");
+const {ResponseLib} = require("../lib/response.lib");
 
 
 //------------------------------- import --------------------------------------
 
+
 async function create(req, res) {
   try {
-    const {...data, info, variants} = req.body;
+    const {info, variants, ...data} = req.body;
     const product = await ProductService.create(data)
+    if (!product) {
+      return new Error("Failed to create product");
+    }
+    
     await Promise.all([
-      ProductInfoService.create(product._id, info),
-      ProductVariantsService.create(product._id, variants),
+      ProductInfoService.create(product['_id'], info),
+      variants && ProductVariantsService.create(product['_id'], variants),
     ]);
     return res.status(200).json({message: "Create Product Successfully"})
   } catch (error) {
@@ -22,15 +32,7 @@ async function update(req, res) {
     const {_id} = req.params;
     const product = await ProductService.get(_id);
     if (!product) return new Error("Product not found")
-    const {...data, info, variants} = req.body;
-    // const updateProduct = await ProductService.update(_id, data)
-    // const updateProductInfo = info?._id ? await ProductInfoService.update(info._id, info) : await ProductInfoService.create(_id, info)
-    //
-    // for (const variant of variants) {
-    //   if (variant?._id) await ProductVariantsService.update(variant._id, variant)
-    //   else await ProductVariantsService.create(_id, variant)
-    // }
-    //
+    const {data, info, variants} = req.body;
     const updates = [
       data && ProductService.update(_id, data),
       info?._id ? ProductInfoService.update(info._id, info) : ProductInfoService.create(_id, info),
@@ -48,8 +50,64 @@ async function update(req, res) {
 
 async function deleteItem(req, res) {
   const {_id} = req.params;
-  const result = await ProductService.delete(_id);
+  const {dele} = req.body
+  const result = await ProductService.deleteItem(_id, dele);
   return res.status(200).json(result);
+}
+
+async function list(req, res) {
+  const {page = 1, limit = 10, search, category, brand, shop, priceTo, priceEnd, rating} = req.query
+  const filters = {};
+  
+  if (search) filters.name = {$regex: search, $options: "i"};
+  if (category) filters.category = category;
+  if (brand) filters.brand = brand;
+  if (shop) filters.shop = shop;
+  if (priceTo || priceEnd) {
+    filters.price = {};
+    if (priceTo) filters.price.$gte = Number(priceTo);
+    if (priceEnd) filters.price.$lte = Number(priceEnd);
+  }
+  if (rating) filters.ratings.average = {$gte: Number(rating)};
+  
+  const products = await ProductService.list(page, limit, {...filters, delete: false, status: "active"});
+  const paging = Paging(page, limit, products.length);
+  const result = Success();
+  ResponseLib(res, result.code, result.message, {data: products, paging});
+}
+
+async function adminList(req, res) {
+  const {page = 1, limit = 10, search, category, brand, shop, priceTo, priceEnd, rating} = req.query
+  const filters = {};
+  
+  if (!!search) filters.name = {$regex: search, $options: "i"};
+  if (!!category) filters.category = category;
+  if (!!brand) filters.brand = brand;
+  if (!!shop) filters.shop = shop;
+  if (Number(priceTo) || Number(priceEnd)) {
+    filters.price = {};
+    if (Number(priceTo)) filters.price.$gte = Number(priceTo);
+    if (Number(priceEnd)) filters.price.$lte = Number(priceEnd);
+  }
+  if (Number(rating) > 0) {
+    filters.ratings = filters.ratings || {};
+    filters.ratings.average = {$gte: Number(rating)};
+  }
+  
+  
+  const products = await ProductService.list(page, limit, filters);
+  const paging = Paging(page, limit, products.length);
+  const result = Success();
+  ResponseLib(res, result.code, result.message, {data: products, paging});
+}
+
+async function get(req, res) {
+  const {_id} = req.params;
+  const product = await ProductService.get(_id);
+  if (!product) throw new Error("Product not found!")
+  // const productInfo = await ProductInfoService.get(product._id || "")
+  const result = Success();
+  ResponseLib(res, result.code, result.message, product);
 }
 
 //------------------------------- export --------------------------------------
@@ -58,5 +116,8 @@ async function deleteItem(req, res) {
 module.exports = {
   create,
   update,
-  deleteItem
+  deleteItem,
+  list,
+  adminList,
+  get
 }
