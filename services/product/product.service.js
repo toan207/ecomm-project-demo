@@ -23,8 +23,7 @@ async function update(_id, data) {
 
 async function get(_id) {
   const product = await Product.findOne({_id})
-  if (!product) throw new Error("Product not found")
-  return product
+  return product ? product : null
 }
 
 

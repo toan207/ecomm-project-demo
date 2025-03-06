@@ -19,9 +19,6 @@ const Schema = new mongoose.Schema({
     of: String,
     required: true,
   },
-  image: {
-    type: String,
-  },
 }, {timestamps: true});
 
 module.exports = Schema;

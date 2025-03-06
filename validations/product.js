@@ -10,6 +10,7 @@ const createProductSchema = Joi.object({
   category: Joi.string().required(),
   brand: Joi.string().required(),
   variantAttributes: Joi.array().items(Joi.string()),
+  variant: Joi.boolean(),
   info: Joi.object({
     _id: Joi.string().optional(),
     stock: Joi.number().min(0).default(0),

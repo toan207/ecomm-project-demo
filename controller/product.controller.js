@@ -102,13 +102,33 @@ async function adminList(req, res) {
 }
 
 async function get(req, res) {
-  const {_id} = req.params;
-  const product = await ProductService.get(_id);
-  if (!product) throw new Error("Product not found!")
-  // const productInfo = await ProductInfoService.get(product._id || "")
-  const result = Success();
-  ResponseLib(res, result.code, result.message, product);
+  try {
+    const {_id} = req.params;
+    const product = await ProductService.get(_id);
+    console.log('product', product)
+    if (!product) {
+      return res.status(404).json({message: "Product not found!"});
+    }
+    
+    const [productInfo, productVariant] = await Promise.all([
+      ProductInfoService.get(product['_id']),
+      product['variant'] ? ProductVariantsService.get(product['_id']) : Promise.resolve(null)
+    ]);
+    
+    console.log('productVariant', productVariant)
+    
+    const result = Success();
+    return ResponseLib(res, result.code, result.message, {
+      product,
+      productInfo,
+      productVariant
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({message: "Internal Server Error"});
+  }
 }
+
 
 //------------------------------- export --------------------------------------
 

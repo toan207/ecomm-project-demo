@@ -20,24 +20,24 @@ const AdminRouter = require('./router/admin.router');
 const SignInRoute = require('./router/signIn.router');
 
 const corsOptions = {
-    origin: '*',
+  origin: '*',
 };
 
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-    res.header(`Access-Control-Allow-Origin`, `*`);
-    res.header(`Access-Control-Allow-Methods`, `GET,PUT,POST,DELETE`);
-    res.header(`Access-Control-Allow-Headers`, `Content-Type`);
-    next();
+  res.header(`Access-Control-Allow-Origin`, `*`);
+  res.header(`Access-Control-Allow-Methods`, `GET,PUT,POST,DELETE`);
+  res.header(`Access-Control-Allow-Headers`, `Content-Type`);
+  next();
 })
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
-app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({extended: true, limit: '5mb'}));
+app.use(bodyParser.json({limit: '5mb'}));
 
 app.use(logger);
 app.get('/api/test', (req, res) => {
-    res.send('test');
+  res.send('test');
 })
 
 // no need login
@@ -53,7 +53,7 @@ app.post('/upload', upload.array('file'), require('./controller/image.controller
 app.use('/api/v1', NeedLoginRouter);
 
 app.use('/api/v1/account', SignInRoute);
-app.use(passport.authenticate('jwt', { session: false }));
+app.use(passport.authenticate('jwt', {session: false}));
 app.use(session_checker);
 
 // editor required
@@ -65,7 +65,7 @@ app.use(admin_required);
 app.use('/api/v1/admin', AdminRouter);
 //
 app.use((err, req, res, next) => {
-    console.log(err);
+  console.log(err);
 })
 
 module.exports = app;
