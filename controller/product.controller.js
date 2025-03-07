@@ -105,7 +105,6 @@ async function get(req, res) {
   try {
     const {_id} = req.params;
     const product = await ProductService.get(_id);
-    console.log('product', product)
     if (!product) {
       return res.status(404).json({message: "Product not found!"});
     }
@@ -115,7 +114,6 @@ async function get(req, res) {
       product['variant'] ? ProductVariantsService.get(product['_id']) : Promise.resolve(null)
     ]);
     
-    console.log('productVariant', productVariant)
     
     const result = Success();
     return ResponseLib(res, result.code, result.message, {

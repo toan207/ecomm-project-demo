@@ -13,6 +13,6 @@ router.use('/vietnam', VietnamRouter);
 router.use('/brands', BrandRouter);
 router.use('/categories', CategoryRouter);
 router.use('/banners', BannerRouter);
-router.use('products', ProductRouter)
+router.use('/products', ProductRouter)
 
 module.exports = router;

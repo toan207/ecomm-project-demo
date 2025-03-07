@@ -19,7 +19,7 @@ async function update(_id, data) {
 }
 
 async function get(product) {
-  return ProductInfo.find({product});
+  return ProductInfo.findOne({product});
 }
 
 module.exports = {

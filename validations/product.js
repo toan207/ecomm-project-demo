@@ -28,7 +28,6 @@ const createProductSchema = Joi.object({
       price: Joi.number().min(0).required(),
       stock: Joi.number().min(0).required(),
       attributes: Joi.object().pattern(Joi.string(), Joi.string()).required(),
-      // image: Joi.string()
     })
   ),
   status: Joi.string().valid("active", "inactive").default("active")
