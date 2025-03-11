@@ -11,6 +11,10 @@ const Schema = new mongoose.Schema({
     ref: "Product",
     required: true,
   },
+  variant: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ProductVariant',
+  },
   quantity: {
     type: Number,
     required: true,

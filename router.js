@@ -43,27 +43,23 @@ app.get('/api/test', (req, res) => {
 // no need login
 app.use('/api/v1', ApiRouter);
 
-// Routes
-app.get('/image/:imageName', require('./controller/image.controller').info);
-app.get('/video/:videoName', require('./controller/image.controller').video);
 
-app.post('/upload', upload.array('file'), require('./controller/image.controller').upload);
-
-// need login
-app.use('/api/v1', NeedLoginRouter);
-
+//
 app.use('/api/v1/account', SignInRoute);
 app.use(passport.authenticate('jwt', {session: false}));
 app.use(session_checker);
+// need login
 
-// editor required
-// app.use(editor_required);
+app.use('/api/v1', NeedLoginRouter);
+
+// shop
 
 // admin required
 app.use(admin_required);
 
 app.use('/api/v1/admin', AdminRouter);
 //
+
 app.use((err, req, res, next) => {
   console.log(err);
 })

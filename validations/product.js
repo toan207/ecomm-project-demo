@@ -16,7 +16,6 @@ const createProductSchema = Joi.object({
     stock: Joi.number().min(0).default(0),
     description: Joi.string().min(5).max(500).required(),
     images: Joi.array().items(Joi.string()),
-    video: Joi.string().allow(""),
     material: Joi.string().optional(),
     dimensions: Joi.string().optional(),
     volume: Joi.string().optional(),
@@ -24,7 +23,7 @@ const createProductSchema = Joi.object({
   }),
   variants: Joi.array().items(
     Joi.object({
-      _id: Joi.string().optional(),
+      _id: Joi.string().optional().allow(""),
       price: Joi.number().min(0).required(),
       stock: Joi.number().min(0).required(),
       attributes: Joi.object().pattern(Joi.string(), Joi.string()).required(),

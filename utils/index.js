@@ -6,6 +6,14 @@ const validate = (schema) => (req, res, next) => {
   next();
 };
 
+const convertObjectToJSONString = (data) => {
+  try {
+    return JSON.stringify(data)
+  } catch (error) {
+    throw new Error('Invalid object format for JSON conversion')
+  }
+}
+
 module.exports = {
-  validate
+  validate, convertObjectToJSONString
 }

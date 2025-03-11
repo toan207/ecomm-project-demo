@@ -4,6 +4,10 @@ const {FieldIsRequired, Success} = require("../model/base-message");
 const {Paging} = require("../model/paging");
 const {getCategory, getCategoryAdmin} = require("../lib/category.lib");
 const {Types} = require("mongoose");
+const LogService = require('../services/log.service')
+const {convertObjectToJSONString} = require("../utils");
+
+//------------------------------- import --------------------------------------//
 
 async function add(req, res) {
   const {name, parent, image, order} = req.body;
@@ -23,7 +27,7 @@ async function add(req, res) {
   } else {
     category = await Category.create({name, image, order});
   }
-  
+  await LogService.addLog(LogService.LogType.CREATE, LogService.Action.CATEGORY, req.user._id, "", convertObjectToJSONString(req.body), "Create category Success")
   const result = Success();
   ResponseLib(res, result.code, result.message, category);
 }
@@ -53,7 +57,6 @@ async function adminList(req, res) {
 async function update(req, res) {
   const {id} = req.params;
   const {name, parent, image, order} = req.body;
-  console.log(req.body)
   
   if (!id) {
     const result = FieldIsRequired("id");
@@ -75,7 +78,7 @@ async function update(req, res) {
   if (!category) {
     return ResponseLib(res, 404, "Category not found", null);
   }
-  
+  await LogService.addLog(LogService.LogType.UPDATE, LogService.Action.CATEGORY, req.user._id, "", convertObjectToJSONString(req.body), "Update category Success")
   const result = Success();
   ResponseLib(res, result.code, result.message, category._id);
 }
@@ -84,6 +87,7 @@ async function deleteItem(req, res) {
   const {id} = req.params;
   const {dele} = req.body
   await Category.findByIdAndUpdate(id, {delete: dele});
+  await LogService.addLog(LogService.LogType.DELETE, LogService.Action.CATEGORY, req.user._id, "", "", "Delete category Success")
   const result = Success();
   ResponseLib(res, result.code, result.message, id);
 }
@@ -93,6 +97,7 @@ async function hideItem(req, res) {
   const {hide} = req.body
   const category = await Category.findByIdAndUpdate(id, {hide: hide});
   const result = Success();
+  await LogService.addLog(LogService.LogType.HIDE, LogService.Action.CATEGORY, req.user._id, "", "", "Hide category Success")
   ResponseLib(res, result.code, result.message, category._id);
 }
 

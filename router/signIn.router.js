@@ -32,7 +32,7 @@ router.route('/signIn').post(passport.authenticate('local', { session: false }),
 
 router.route('/adminSignIn').post(passport.authenticate('local', { session: false }), async (req, res, next) => {
   const token = encodedToken(req.user._id);
-  if (req.user.role == 'user') return res.json({ success: false, message: "Admin role required!" });
+  if (req.user.role === 'user') return res.json({ success: false, message: "Admin role required!" });
 
   await Session.create({
     cookie: 'Bearer ' + token,

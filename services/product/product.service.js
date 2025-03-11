@@ -37,6 +37,10 @@ async function list(page, limit, filters) {
     .sort({createdAt: -1})
 }
 
+async  function count(filters) {
+  return Product.countDocuments(filters)
+}
+
 module.exports = {
-  create, get, deleteItem, update, list
+  create, get, deleteItem, update, list, count
 }
