@@ -5,7 +5,6 @@ const Schema = new mongoose.Schema({
   shop: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Shop",
-    required: true,
   },
   name: {
     type: String,
@@ -23,10 +22,37 @@ const Schema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  expire: {
+  startDate: {
     type: Date,
     required: true,
   },
+  endDate: {
+    type: Date,
+    required: true,
+  },
+  used: {
+    type: Number,
+    default: 0,
+  }, // số lượng đã được sử dunjg
+  minPrice: {
+    type: Number,
+    required: true,
+  },
+  appliesTo: {
+    type: String,
+    required: true,
+    enum: ['all', 'specific'],
+    default: 'all'
+  },
+  productIds: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Product",
+    default: [],
+  },
+  delete: {
+    type: Boolean,
+    default: false
+  }
 });
 
 Schema.set("timestamps", true);

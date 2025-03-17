@@ -12,20 +12,25 @@ const Schema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   address: {
     type: String,
     required: true,
   },
-  logo: {
+  banner: {
     type: String,
-    required: true,
+  },
+  avatar: {
+    type: String,
   },
   rating: {
     type: Number,
     required: true,
     default: 0,
+  },
+  isActive: {
+    type: Boolean,
+    default: false,
   },
 });
 

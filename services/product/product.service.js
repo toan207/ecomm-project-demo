@@ -21,8 +21,8 @@ async function update(_id, data) {
   return Product.findByIdAndUpdate(_id, data);
 }
 
-async function get(_id) {
-  const product = await Product.findOne({_id})
+async function get(filters) {
+  const product = await Product.findOne(filters)
   return product ? product : null
 }
 
@@ -37,7 +37,7 @@ async function list(page, limit, filters) {
     .sort({createdAt: -1})
 }
 
-async  function count(filters) {
+async function count(filters) {
   return Product.countDocuments(filters)
 }
 

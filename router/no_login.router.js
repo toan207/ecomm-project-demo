@@ -7,6 +7,7 @@ const BrandRouter = require('./brand/no_login.router');
 const CategoryRouter = require('./category/no_login.router');
 const BannerRouter = require('./banner/no_login.router');
 const ProductRouter = require('./product/no_login.router');
+const CouponRouter = require('./coupon/no_login.router');
 
 router.use('/accounts', AccountRouter);
 router.use('/vietnam', VietnamRouter);
@@ -14,5 +15,6 @@ router.use('/brands', BrandRouter);
 router.use('/categories', CategoryRouter);
 router.use('/banners', BannerRouter);
 router.use('/products', ProductRouter)
+router.use('/coupons', CouponRouter)
 
 module.exports = router;

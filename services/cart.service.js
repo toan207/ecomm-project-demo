@@ -34,7 +34,6 @@ async function update(account, data) {
   );
 }
 
-
 async function reset(account) {
   return Cart.deleteOne({account})
 }

@@ -13,6 +13,7 @@ const {convertObjectToJSONString} = require("../utils");
 async function create(req, res) {
   try {
     const {info, variants, ...data} = req.body;
+    data.shop = req.shopId || data.shop || ""
     const product = await ProductService.create(data)
     if (!product) {
       return new Error("Failed to create product");
@@ -33,7 +34,7 @@ async function create(req, res) {
 async function update(req, res) {
   const {_id} = req.params;
   try {
-    const product = await ProductService.get(_id);
+    const product = await ProductService.get({_id});
     if (!product) return new Error("Product not found")
     const {info, variants, ...data} = req.body;
     
@@ -69,24 +70,44 @@ async function deleteItem(req, res) {
 
 async function list(req, res) {
   const {page = 1, limit = 10, search, category, brand, shop, priceTo, priceEnd, rating} = req.query
-  const filters = {};
+  const filters = {
+    shop: String(req.shopId) || shop,
+    delete: false
+  };
+  
+  if (!req.shopId) {
+    filters.status = "active";
+  }
+  
   if (search) filters.name = {$regex: search, $options: "i"};
   if (category) filters.category = category;
   if (brand) filters.brand = brand;
   if (shop) filters.shop = shop;
-  if (priceTo || priceEnd) {
+  if (Number(priceTo) || Number(priceEnd)) {
     filters.price = {};
-    if (priceTo) filters.price.$gte = Number(priceTo);
-    if (priceEnd) filters.price.$lte = Number(priceEnd);
+    if (Number(priceTo)) filters.price.$gte = Number(priceTo);
+    if (Number(priceEnd)) filters.price.$lte = Number(priceEnd);
   }
-  if (rating) filters.ratings.average = {$gte: Number(rating)};
+  if (Number(rating)) {
+    filters.ratings = filters.ratings || {};
+    filters.ratings.average = {$gte: Number(rating)};
+  }
   
-  const products = await ProductService.list(page, limit, {...filters, delete: false, status: "active"});
-  const count = await ProductService.count({...filters, delete: false, status: "active"});
+  const products = await ProductService.list(page, limit, filters);
+  const count = await ProductService.count(filters);
   
   const paging = Paging(page, limit, count);
   const result = Success();
-  ResponseLib(res, result.code, result.message, {data: products, paging});
+  
+  const sanitizedProducts = products.map(item => {
+    const obj = item.toObject();
+    delete obj.delete;
+    return obj;
+  });
+  
+  ResponseLib(res, result.code, result.message, {
+    data: sanitizedProducts, paging
+  });
 }
 
 async function adminList(req, res) {
@@ -119,7 +140,7 @@ async function adminList(req, res) {
 async function get(req, res) {
   try {
     const {_id} = req.params;
-    const product = await ProductService.get(_id);
+    const product = await ProductService.get({_id});
     if (!product) {
       return res.status(404).json({message: "Product not found!"});
     }
@@ -143,6 +164,14 @@ async function get(req, res) {
 }
 
 
+async function shopUpdateStatusProduct(req, res) {
+  const {_id} = req.params;
+  const {status} = req.body;
+  const result = await ProductService.update(_id, {status});
+  return res.status(200).json({message: "Update Product Successfully"})
+}
+
+
 //------------------------------- export --------------------------------------
 
 
@@ -152,5 +181,5 @@ module.exports = {
   deleteItem,
   list,
   adminList,
-  get
+  get, shopUpdateStatusProduct
 }

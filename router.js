@@ -54,10 +54,11 @@ app.use('/api/v1', NeedLoginRouter);
 
 // shop
 
-// admin required
-app.use(admin_required);
+app.use('/api/v1/shops', require('./router/shop.router'));
 
-app.use('/api/v1/admin', AdminRouter);
+// admin required
+
+app.use('/api/v1/admin', admin_required, AdminRouter);
 //
 
 app.use((err, req, res, next) => {

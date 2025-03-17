@@ -30,6 +30,18 @@ router.route('/signIn').post(passport.authenticate('local', { session: false }),
   return res.json({ success: true, message: "Login success!", data: { token: 'Bearer ' + token } });
 })
 
+router.route('/shopSignIn').post(passport.authenticate('local', { session: false }), async (req, res, next) => {
+  const token = encodedToken(req.user._id);
+  
+  await Session.create({
+    cookie: 'Bearer ' + token,
+    expired: new Date().setDate(new Date().getDate() + 3),
+  })
+  
+  res.setHeader('Authorization', 'Bearer ' + token);
+  return res.json({ success: true, message: "Login success!", data: { token: 'Bearer ' + token } });
+})
+
 router.route('/adminSignIn').post(passport.authenticate('local', { session: false }), async (req, res, next) => {
   const token = encodedToken(req.user._id);
   if (req.user.role === 'user') return res.json({ success: false, message: "Admin role required!" });
@@ -42,5 +54,7 @@ router.route('/adminSignIn').post(passport.authenticate('local', { session: fals
   res.setHeader('Authorization', 'Bearer ' + token);
   return res.json({ success: true, message: "Login success!", data: { token: 'Bearer ' + token } });
 })
+
+
 
 module.exports = router;
