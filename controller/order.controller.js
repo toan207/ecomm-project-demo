@@ -111,7 +111,7 @@ async function checkoutReview(req, res) {
 
 async function checkout(req, res) {
   try {
-    const {cardId, shop_order_ids} = req.body;
+    const {cardId, shop_order_ids, info} = req.body;
     const userId = req.user._id;
     const cart = await CartService.getOne({account: userId}) ? true : false
     
@@ -123,17 +123,18 @@ async function checkout(req, res) {
         shop: order.shopId,
         totalPrice: order.priceApplyDiscount,
         priceRaw: order.priceRaw,
-        discounts: order.shop_discounts.map(item => item.discountId)
+        discounts: order.shop_discounts.map(item => item.discountId),
+        info
       })
       for (const product of order.item_products) {
         const orderItem = await OrderItemService.create({
           order: orderCreate._id,
           product: product.productId,
-          variant: product.variantId,
+          variant: product.variantId ? product.variantId : null,
           quantity: product.quantity,
           price: product.price
         });
-        await CartService.remove(userId, product.productId);
+        if (cart) await CartService.remove(userId, product.productId);
       }
     }
     

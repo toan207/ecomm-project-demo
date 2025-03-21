@@ -5,7 +5,7 @@ const {Paging} = require("../model/paging");
 const {Success} = require("../model/base-message");
 const {ResponseLib} = require("../lib/response.lib");
 const LogService = require('../services/log.service')
-const {convertObjectToJSONString} = require("../utils");
+const {convertObjectToJSONString, convertObjectId} = require("../utils");
 
 //------------------------------- import --------------------------------------
 
@@ -70,10 +70,16 @@ async function deleteItem(req, res) {
 
 async function list(req, res) {
   const {page = 1, limit = 10, search, category, brand, shop, priceTo, priceEnd, rating} = req.query
+  
+  const shopId = req.shopId ? String(req.shopId) : shop || null;
+  
   const filters = {
-    shop: String(req.shopId) || shop,
     delete: false
   };
+  
+  if (shopId) {
+    filters.shop = convertObjectId(shopId);
+  }
   
   if (!req.shopId) {
     filters.status = "active";
@@ -144,12 +150,12 @@ async function get(req, res) {
     if (!product) {
       return res.status(404).json({message: "Product not found!"});
     }
+    console.log(product._id)
     
     const [productInfo, productVariant] = await Promise.all([
-      ProductInfoService.get(product['_id']),
-      product['variant'] ? ProductVariantsService.get(product['_id']) : Promise.resolve(null)
+      ProductInfoService.get({product: product._id}),
+      product['variant'] ? ProductVariantsService.get({product: product._id}) : Promise.resolve(null)
     ]);
-    
     
     const result = Success();
     return ResponseLib(res, result.code, result.message, {

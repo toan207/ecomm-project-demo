@@ -8,8 +8,8 @@ async function update(_id, data) {
   return ProductVariant.findByIdAndUpdate(_id, data);
 }
 
-async function get(product) {
-  return ProductVariant.find({product})
+async function get(filters) {
+  return ProductVariant.find(filters)
 }
 
 async function getById(_id) {

@@ -28,7 +28,13 @@ const Schema = new mongoose.Schema({
   discounts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Coupon'
-  }]
+  }],
+  info: {
+    name: {type: String, required: true},
+    phone: {type: String, required: true},
+    address: {type: String, required: true},
+    note: {type: String},
+  },
 });
 
 Schema.set("timestamps", true);

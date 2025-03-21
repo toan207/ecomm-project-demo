@@ -18,7 +18,7 @@ const Schema = new mongoose.Schema({
     },
     variant: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ProductVariant',
+      ref: 'ProductVariants',
     },
   }],
 });
