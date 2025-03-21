@@ -18,8 +18,8 @@ async function update(_id, data) {
   return ProductInfo.findByIdAndUpdate(_id, data);
 }
 
-async function get(product) {
-  return ProductInfo.findOne({product});
+async function get(filter) {
+  return ProductInfo.findOne(filter);
 }
 
 module.exports = {

@@ -30,10 +30,6 @@ const Schema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  used: {
-    type: Number,
-    default: 0,
-  }, // số lượng đã được sử dunjg
   minPrice: {
     type: Number,
     required: true,

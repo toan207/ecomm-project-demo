@@ -15,6 +15,13 @@ const convertObjectToJSONString = (data) => {
   }
 }
 
+const convertObjectId = (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error("Invalid ObjectId");
+  }
+  return new mongoose.Types.ObjectId(id);
+};
+
 module.exports = {
-  validate, convertObjectToJSONString
+  validate, convertObjectToJSONString, convertObjectId
 }

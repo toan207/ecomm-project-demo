@@ -54,6 +54,10 @@ async function get(filter, page, limit) {
     .populate('products.variant', "price attributes");
 }
 
+async function getOne(filter) {
+  return Cart.findOne(filter)
+}
+
 async function count(account) {
   const cart = await Cart.findOne({account}).select({totalProducts: {$size: "$products"}});
   
@@ -62,5 +66,5 @@ async function count(account) {
 
 
 module.exports = {
-  add, update, remove, reset, get, count
+  add, update, remove, reset, get, count, getOne
 }

@@ -15,11 +15,20 @@ const Schema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  priceRaw: {
+    type: Number,
+    required: true,
+  },
   status: {
     type: String,
     required: true,
+    enum: ["pending", "processing", "completed", "cancelled", 'shipping'],
     default: "pending",
   },
+  discounts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Coupon'
+  }]
 });
 
 Schema.set("timestamps", true);
